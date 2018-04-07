@@ -1,0 +1,22 @@
+{application, jiffy_global,
+ [
+  {description,
+   "Jiffy Global is An Erlang version of @discordapp's fastglobal (Fast no copy globals for Elixir)"},
+  {vsn, "1.0.0"},
+  {applications, [kernel, stdlib]},
+  {modules, []},
+  {registered, []},
+  {files, [ "src/*"
+          , "test/*"
+          , "Makefile"
+          , "README.md"
+          , "rebar.config"
+          , "rebar.lock"
+          , "LICENCE"
+          ]},
+  {maintainers, []},
+  {licenses, ["MIT"]},
+  {links, [{"Github", "https://github.com/davecaos/jiffy_global"}]},
+  {build_tools, ["rebar3"]}
+ ]
+}.
