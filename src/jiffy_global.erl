@@ -2,9 +2,15 @@
 
 -export([
          new/1,
-         get/1,
-         get/2,
-         put/2,
+         get_atom_key/1,
+         get_atom_key/2,
+         get_string_key/1,
+         get_string_key/2,
+         get_binary_key/1,
+         get_binary_key/2,
+         put_atom_key/2,
+         put_string_key/2,
+         put_binary_key/2,
          delete/1
 ]).
 
@@ -20,28 +26,75 @@ new(Key) ->
 %% @doc
 %%   Get the value for `key` or return nil.
 %% @end
--spec get(atom()) -> any() | nil.
-get(Key) ->
-    get(Key, nil).
+-spec get_atom_key(atom()) -> any() | nil.
+get_atom_key(Key) ->
+    get_atom_key(Key, nil).
+
+%% @doc
+%%   Get the value for a string() `key` or return nil.
+%% @end
+-spec get_string_key(atom()) -> any() | nil.
+get_string_key(Key) ->
+    get_string_key(Key, nil).
+
+%% @doc
+%%   Get the value for a binary() `key` or return nil.
+%% @end
+-spec get_binary_key(atom()) -> any() | nil.
+get_binary_key(Key) ->
+    get_binary_key(Key, nil).
 
 %%  @doc
-%%    Get the value for `key` or return `default`.
+%%    Get the value for atom() `key` or return `default`.
 %%  @end
--spec get(atom() | type(), any()) -> any().
-get({?MODULE, Module}, Default) ->
+-spec get_atom_key(atom() | type(), any()) -> any().
+get_atom_key({?MODULE, Module}, Default) ->
     do_get(Module, Default);
-get(Key, Default) ->
+get_atom_key(Key, Default) ->
     Module =  key_to_module(Key),
     do_get(Module, Default).
 
+
 %%  @doc
-%%    Store `value` at `key`, replaces an existing value if present.
+%%    Get the  value for a string() `key` or return `default`.
 %%  @end
--spec put(atom() | {?MODULE, module()}, any()) -> ok.
-put({?MODULE, Module}, Value) ->
+-spec get_string_key(string(), any()) -> any().
+get_string_key(Key, Default) ->
+    Module =  string_key_to_module(Key),
+    do_get(Module, Default).
+
+%%  @doc
+%%    Get the value for a binary() `key` or return `default`.
+%%  @end
+-spec get_binary_key(binary(), any()) -> any().
+get_binary_key(Key, Default) ->
+    Module =  binary_key_to_module(Key),
+    do_get(Module, Default).
+
+%%  @doc
+%%    Store an  `value` at atom() `key`, replaces an existing value if present.
+%%  @end
+-spec put_atom_key(atom() | {?MODULE, module()}, any()) -> ok.
+put_atom_key({?MODULE, Module}, Value) ->
     do_put(Module, Value);
-put(Key, Value) ->
+put_atom_key(Key, Value) ->
      Module =  key_to_module(Key),
+     do_put(Module, Value).
+
+%%  @doc
+%%    Store an `value` at a string() `key`, replaces an existing value if present.
+%%  @end
+-spec put_string_key(string(), any()) -> ok.
+put_string_key(Key, Value) ->
+     Module = string_key_to_module(Key),
+     do_put(Module, Value).
+
+%%  @doc
+%%    Store an `value` at a binary() `key`, replaces an existing value if present.
+%%  @end
+-spec put_binary_key(binary(), any()) -> ok.
+put_binary_key(Key, Value) ->
+     Module = binary_key_to_module(Key),
      do_put(Module, Value).
 
 %%  @doc
@@ -81,6 +134,14 @@ do_delete(Module) ->
 -spec key_to_module(atom()) ->  atom.
 key_to_module(Key) ->
     list_to_atom("jiffy_global:" ++ atom_to_list(Key)).
+
+-spec binary_key_to_module(binary()) ->  atom.
+binary_key_to_module(Key) ->
+    list_to_atom("jiffy_global:" ++ binary_to_list(Key)).
+
+-spec string_key_to_module(binary()) ->  atom.
+string_key_to_module(Key) ->
+    list_to_atom("jiffy_global:" ++ Key).
 
 -spec compile(atom(), any()) ->  binary().
 compile(Module, Value) ->
