@@ -11,7 +11,9 @@
          put_atom_key/2,
          put_string_key/2,
          put_binary_key/2,
-         delete/1
+         delete_atom_key/1,
+         delete_string_key/1,
+         delete_binary_key/1
 ]).
 
 -type type() :: {?MODULE, atom()}.
@@ -98,15 +100,30 @@ put_binary_key(Key, Value) ->
      do_put(Module, Value).
 
 %%  @doc
-%%    Delete value stored at `key`, no-op if non-existent.
+%%    Delete value stored at an atom() `key`, no-op if non-existent.
 %%  @end
--spec delete(atom() | {?MODULE, module()}) -> ok.
-delete({?MODULE, Module}) ->
-    do_delete(Module);
-delete(Key) ->
+-spec delete_atom_key(atom() | {?MODULE, module()}) -> ok.
+delete_atom_key(Key) ->
      Module =  key_to_module(Key),
      do_delete(Module).
 
+%%  @doc
+%%    Delete value stored at a string() `key`, no-op if non-existent.
+%%  @end
+-spec delete_string_key(atom() | {?MODULE, module()}) -> ok.
+delete_string_key(Key) ->
+     Module =  string_key_to_module(Key),
+     do_delete(Module).
+
+%%  @doc
+%%    Delete value stored at a binary() `key`, no-op if non-existent.
+%%  @end
+-spec delete_binary_key(atom() | {?MODULE, module()}) -> ok.
+delete_binary_key({?MODULE, Module}) ->
+    do_delete(Module);
+delete_binary_key(Key) ->
+     Module =  binary_key_to_module(Key),
+     do_delete(Module).
 
  %% Private
 
